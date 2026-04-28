@@ -1,5 +1,58 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Mail, Play, Award, TrendingUp, BookOpen } from 'lucide-react';
+
+// Helper function to extract YouTube video ID from any YouTube URL
+function getYouTubeID(url) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
+// Animated Counter Component
+function AnimatedCounter({ target, suffix = '', prefix = '' }) {
+  const [count, setCount] = useState(0);
+  const counterRef = useRef(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          let start = 0;
+          const end = target;
+          const duration = 2000;
+          const increment = end / (duration / 16);
+          
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= end) {
+              setCount(end);
+              clearInterval(timer);
+            } else {
+              setCount(Math.floor(start));
+            }
+          }, 16);
+          
+          return () => clearInterval(timer);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [target, hasAnimated]);
+
+  return (
+    <div ref={counterRef} className="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
+      {prefix}{count}{suffix}
+    </div>
+  );
+}
 
 export default function UGCPortfolio() {
   const videos = [
@@ -57,7 +110,7 @@ export default function UGCPortfolio() {
       </nav>
 
       {/* HERO */}
-      <section className="pt-32 pb-20 px-6 text-center">
+      <section className="pt-32 pb-12 px-6 text-center">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <img 
@@ -75,31 +128,62 @@ export default function UGCPortfolio() {
             Authentic finance-focused user generated content, educational YouTube Shorts,
             and conversion-first fintech storytelling.
           </p>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-            <div className="bg-blue-500/10 border border-blue-400/30 rounded-xl p-6">
-              <Award className="mx-auto mb-4 text-blue-400" />
-              <h3 className="font-bold text-blue-300 mb-2">Finance Authority</h3>
-              <p className="text-blue-100 text-sm">MBA-backed financial literacy content built for trust.</p>
+      {/* ANIMATED COUNTERS - SOCIAL PROOF */}
+      <section className="py-16 px-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="text-center p-6 bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-xl border border-blue-400/30">
+            <AnimatedCounter target={500} suffix="K+" />
+            <p className="text-blue-200 text-sm mt-2">YouTube Views</p>
+          </div>
+          <div className="text-center p-6 bg-gradient-to-br from-cyan-500/20 to-blue-500/10 rounded-xl border border-cyan-400/30">
+            <AnimatedCounter target={100} suffix="K+" />
+            <p className="text-cyan-200 text-sm mt-2">Blog Readers</p>
+          </div>
+          <div className="text-center p-6 bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-xl border border-blue-400/30">
+            <AnimatedCounter target={50} suffix="+" />
+            <p className="text-blue-200 text-sm mt-2">Videos Created</p>
+          </div>
+          <div className="text-center p-6 bg-gradient-to-br from-cyan-500/20 to-blue-500/10 rounded-xl border border-cyan-400/30">
+            <AnimatedCounter target={100} suffix="%" />
+            <p className="text-cyan-200 text-sm mt-2">Authentic Content</p>
+          </div>
+        </div>
+      </section>
+
+      {/* WHY HIRE ME - TRUST STRIP */}
+      <section className="py-20 px-6 bg-gradient-to-r from-blue-950/30 to-cyan-950/30">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
+            Why Hire Me?
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-6 rounded-xl hover:bg-white/5 transition">
+              <div className="text-5xl mb-4">🎓</div>
+              <h3 className="text-xl font-bold text-blue-300 mb-2">MBA in Finance</h3>
+              <p className="text-blue-200 text-sm">10+ years of financial expertise and consumer education</p>
             </div>
-
-            <div className="bg-cyan-500/10 border border-cyan-400/30 rounded-xl p-6">
-              <Play className="mx-auto mb-4 text-cyan-400" />
-              <h3 className="font-bold text-cyan-300 mb-2">UGC Video Production</h3>
-              <p className="text-cyan-100 text-sm">Professional fintech and AI product promotional content.</p>
+            
+            <div className="text-center p-6 rounded-xl hover:bg-white/5 transition">
+              <div className="text-5xl mb-4">📊</div>
+              <h3 className="text-xl font-bold text-cyan-300 mb-2">Data-Driven Content</h3>
+              <p className="text-blue-200 text-sm">Research-backed videos that actually help viewers</p>
             </div>
-
-            <div className="bg-blue-500/10 border border-blue-400/30 rounded-xl p-6">
-              <TrendingUp className="mx-auto mb-4 text-blue-400" />
-              <h3 className="font-bold text-blue-300 mb-2">SEO Content Strategy</h3>
-              <p className="text-blue-100 text-sm">Evergreen educational articles engineered for traffic.</p>
+            
+            <div className="text-center p-6 rounded-xl hover:bg-white/5 transition">
+              <div className="text-5xl mb-4">🎥</div>
+              <h3 className="text-xl font-bold text-blue-300 mb-2">Professional Production</h3>
+              <p className="text-blue-200 text-sm">1080p quality, clear audio, engaging storytelling</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="py-16 px-6 max-w-5xl mx-auto">
+      <section id="about" className="py-20 px-6 max-w-5xl mx-auto">
         <h2 className="text-4xl font-bold mb-8 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
           About Me
         </h2>
@@ -140,27 +224,42 @@ export default function UGCPortfolio() {
         </div>
       </section>
 
-      {/* VIDEOS */}
+      {/* VIDEOS WITH REAL YOUTUBE THUMBNAILS */}
       <section id="portfolio" className="py-20 px-6 max-w-5xl mx-auto">
         <h2 className="text-4xl font-bold mb-12 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
           Featured Videos
         </h2>
 
         <div className="space-y-8">
-          {videos.map((video, index) => (
-            <div key={index} className="bg-slate-900/50 border border-blue-400/20 rounded-xl overflow-hidden hover:border-blue-300/50 transition">
-              <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
-                <Play className="w-16 h-16 text-blue-400 opacity-60" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-blue-300 mb-2">{video.title}</h3>
-                <p className="text-blue-200 mb-4">{video.description}</p>
-                <a href={video.link} target="_blank" rel="noreferrer" className="text-cyan-300 hover:text-cyan-100 font-semibold inline-flex items-center gap-2">
-                  <Play className="w-4 h-4" /> Watch Video
+          {videos.map((video, index) => {
+            const videoId = getYouTubeID(video.link);
+            return (
+              <div key={index} className="bg-slate-900/50 border border-blue-400/20 rounded-xl overflow-hidden hover:border-blue-300/50 transition">
+                <a href={video.link} target="_blank" rel="noreferrer" className="block">
+                  <div className="relative">
+                    <img 
+                      src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                      alt={video.title}
+                      className="w-full aspect-video object-cover"
+                      onError={(e) => {
+                        e.target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                      }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition">
+                      <Play className="w-16 h-16 text-white opacity-80 hover:opacity-100 transition" />
+                    </div>
+                  </div>
                 </a>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-blue-300 mb-2">{video.title}</h3>
+                  <p className="text-blue-200 mb-4">{video.description}</p>
+                  <a href={video.link} target="_blank" rel="noreferrer" className="text-cyan-300 hover:text-cyan-100 font-semibold inline-flex items-center gap-2">
+                    <Play className="w-4 h-4" /> Watch Video
+                  </a>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -183,7 +282,7 @@ export default function UGCPortfolio() {
         </div>
       </section>
 
-      {/* FINANCE CALCULATOR TOOL - NEW SECTION */}
+      {/* FINANCE CALCULATOR TOOL */}
       <section id="tools" className="py-20 px-6 max-w-5xl mx-auto">
         <h2 className="text-4xl font-bold mb-8 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
           Smart Finance Calculator Suite
