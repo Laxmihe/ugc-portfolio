@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Mail, Play, Award, TrendingUp, BookOpen } from 'lucide-react';
 
-// Helper function to extract YouTube video ID from any YouTube URL
+// FIXED: Helper function to handle YouTube Shorts AND standard URLs
 function getYouTubeID(url) {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  // This regex now specifically looks for "shorts/" as well as standard "v=" or "youtu.be"
+  const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
   const match = url.match(regExp);
-  return (match && match[2].length === 11) ? match[2] : null;
+  return (match && match[1].length === 11) ? match[1] : null;
 }
 
 // Animated Counter Component
@@ -224,7 +225,7 @@ export default function UGCPortfolio() {
         </div>
       </section>
 
-      {/* VIDEOS WITH REAL YOUTUBE THUMBNAILS */}
+      {/* VIDEOS WITH FIXED YOUTUBE SHORTS THUMBNAILS */}
       <section id="portfolio" className="py-20 px-6 max-w-5xl mx-auto">
         <h2 className="text-4xl font-bold mb-12 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
           Featured Videos
@@ -233,16 +234,19 @@ export default function UGCPortfolio() {
         <div className="space-y-8">
           {videos.map((video, index) => {
             const videoId = getYouTubeID(video.link);
+            
             return (
               <div key={index} className="bg-slate-900/50 border border-blue-400/20 rounded-xl overflow-hidden hover:border-blue-300/50 transition">
                 <a href={video.link} target="_blank" rel="noreferrer" className="block">
                   <div className="relative">
+                    {/* Using hqdefault for better compatibility with Shorts */}
                     <img 
-                      src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                      src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
                       alt={video.title}
                       className="w-full aspect-video object-cover"
                       onError={(e) => {
-                        e.target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                        // Final fallback to standard definition if hq fails
+                        e.target.src = `https://img.youtube.com/vi/${videoId}/0.jpg`;
                       }}
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition">
@@ -365,3 +369,4 @@ export default function UGCPortfolio() {
     </div>
   );
 }
+
