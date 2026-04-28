@@ -50,6 +50,7 @@ export default function UGCPortfolio() {
             <a href="#about" className="text-blue-300 hover:text-blue-100 transition">About</a>
             <a href="#portfolio" className="text-blue-300 hover:text-blue-100 transition">Portfolio</a>
             <a href="#pillars" className="text-blue-300 hover:text-blue-100 transition">Articles</a>
+            <a href="#tools" className="text-blue-300 hover:text-blue-100 transition">Tools</a>
             <a href="#contact" className="text-blue-300 hover:text-blue-100 transition">Contact</a>
           </div>
         </div>
@@ -163,7 +164,7 @@ export default function UGCPortfolio() {
         </div>
       </section>
 
-      {/* PILLARS */}
+      {/* PILLAR PAGES */}
       <section id="pillars" className="py-20 px-6 max-w-6xl mx-auto">
         <h2 className="text-4xl font-bold mb-12 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
           Featured Pillar Pages
@@ -180,6 +181,34 @@ export default function UGCPortfolio() {
             </a>
           ))}
         </div>
+      </section>
+
+      {/* FINANCE CALCULATOR TOOL - NEW SECTION */}
+      <section id="tools" className="py-20 px-6 max-w-5xl mx-auto">
+        <h2 className="text-4xl font-bold mb-8 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
+          Smart Finance Calculator Suite
+        </h2>
+        
+        <a href="https://v0-deploy-project-six.vercel.app/" target="_blank" rel="noopener noreferrer" className="block group">
+          <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/10 border border-blue-400/30 rounded-xl p-8 hover:border-blue-300/50 transition hover:scale-[1.02] transform duration-300">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div>
+                <h3 className="text-2xl font-bold text-blue-300 mb-2">Interactive Financial Planning Tool</h3>
+                <p className="text-blue-200 text-lg">Loan calculator • Investment growth • Budget planner • Retirement planning</p>
+                <p className="text-cyan-300 text-sm mt-3 flex items-center gap-2">
+                  Click to try it → 
+                  <span className="inline-block transition-transform group-hover:translate-x-1">🧮</span>
+                </p>
+              </div>
+              <div className="text-7xl bg-blue-500/20 rounded-full p-4">
+                🧮
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-blue-400/20">
+              <p className="text-blue-300 text-sm">✅ Built by me • ✅ Real-time calculations • ✅ Free for readers</p>
+            </div>
+          </div>
+        </a>
       </section>
 
       {/* CONTACT */}
